@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Redirecting…</title>
+    <!-- Fallback: redirect to login if JS is disabled -->
+    <meta http-equiv="refresh" content="0; url=/login"/>
+</head>
+<body>
+<!-- This page is reached only if SecurityConfig redirect logic fails -->
+<p>Redirecting… <a th:href="@{/login}">click here</a> if not redirected.</p>
+</body>
+</html>
