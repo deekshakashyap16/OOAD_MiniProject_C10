@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Register | Campus Marketplace</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            <h1>🎓 Campus Marketplace</h1>
+            <p>Create your account</p>
+        </div>
+
+        <form th:action="@{/register}" th:object="${registerRequest}" method="post" novalidate>
+
+            <!-- Name -->
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" th:field="*{name}"
+                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                       class="form-control" placeholder="Your full name" required/>
+                <div class="field-error" th:if="${#fields.hasErrors('name')}"
+                     th:errors="*{name}"></div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" th:field="*{email}"
+                       th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+                       class="form-control" placeholder="you@campus.edu" required/>
+                <div class="field-error" th:if="${#fields.hasErrors('email')}"
+                     th:errors="*{email}"></div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" th:field="*{password}"
+                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                       class="form-control" placeholder="Minimum 6 characters" required/>
+                <div class="field-error" th:if="${#fields.hasErrors('password')}"
+                     th:errors="*{password}"></div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" th:field="*{confirmPassword}"
+                       th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"
+                       class="form-control" placeholder="Re-enter password" required/>
+                <div class="field-error" th:if="${#fields.hasErrors('confirmPassword')}"
+                     th:errors="*{confirmPassword}"></div>
+            </div>
+
+            <!-- Role -->
+            <div class="form-group">
+                <label for="role">I want to</label>
+                <select id="role" th:field="*{role}"
+                        th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'"
+                        class="form-control" required>
+                    <option value="">-- Select a role --</option>
+                    <option th:each="r : ${roles}" th:value="${r}" th:text="${r == T(com.pes.marketplace.model.Role).BUYER ? 'Buy items (Buyer)' : 'Sell items (Seller)'}"></option>
+                </select>
+                <div class="field-error" th:if="${#fields.hasErrors('role')}"
+                     th:errors="*{role}"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-2">Create Account</button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account? <a th:href="@{/login}">Sign in</a>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

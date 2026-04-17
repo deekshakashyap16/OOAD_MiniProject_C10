@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Browse Items | Campus Marketplace</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/search-filters.css}"/>
+</head>
+<body>
+
+<!-- ── Navbar ─────────────────────────────────────────────── -->
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/buyer/browse}">🎓 Campus Marketplace</a></div>
+    <div class="nav-links">
+        <a th:href="@{/buyer/browse}">Browse</a>
+        <a th:href="@{/buyer/orders}">My Orders</a>
+        <span class="nav-user" sec:authentication="name"></span>
+        <a th:href="@{/logout}" class="btn-logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Flash messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}"   class="alert alert-error"   th:text="${errorMessage}"></div>
+
+    <div class="page-header">
+        <div>
+            <h1>Browse Items</h1>
+            <p class="page-subtitle">Find what you need on campus</p>
+        </div>
+    </div>
+
+    <!-- ── UC2 Search Filters ─────────────────────────────────── -->
+    <form th:action="@{/buyer/browse}" method="get" class="search-bar">
+        <div class="form-group">
+            <label>Search</label>
+            <input type="text" name="keyword" class="form-control"
+                   placeholder="Item name or description..."
+                   th:value="${keyword}"/>
+        </div>
+        <div class="form-group">
+            <label>Category</label>
+            <select name="categoryId" class="form-control">
+                <option value="">All Categories</option>
+                <option th:each="cat : ${categories}"
+                        th:value="${cat.id}"
+                        th:text="${cat.name}"
+                        th:selected="${cat.id == selectedCategoryId}">
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Min Price (₹)</label>
+            <input type="number" name="minPrice" class="form-control"
+                   placeholder="0" min="0" step="0.01" th:value="${minPrice}"/>
+        </div>
+        <div class="form-group">
+            <label>Max Price (₹)</label>
+            <input type="number" name="maxPrice" class="form-control"
+                   placeholder="Any" min="0" step="0.01" th:value="${maxPrice}"/>
+        </div>
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <a th:href="@{/buyer/browse}" class="btn btn-secondary">Clear</a>
+        </div>
+    </form>
+
+    <!-- ── Item Grid ──────────────────────────────────────────── -->
+    <div th:if="${items.empty}" class="empty-state">
+        <span class="empty-icon">🔍</span>
+        <p>No items match your search. Try different filters.</p>
+    </div>
+
+    <div class="items-grid" th:unless="${items.empty}">
+        <div class="card" th:each="item : ${items}">
+            <div class="card-body">
+                <div style="font-size:2.5rem; text-align:center; margin-bottom:.5rem;">📦</div>
+                <div class="card-title" th:text="${item.name}">Item Name</div>
+                <div class="card-price" th:text="'₹' + ${item.price}">₹0</div>
+                <div class="card-meta">
+                    <span th:text="${item.category.name}">Category</span>
+                </div>
+                <div class="card-meta mt-1" th:text="${#strings.abbreviate(item.description, 80)}">
+                    Description
+                </div>
+                <a th:href="@{/buyer/item/{id}(id=${item.id})}"
+                   class="btn btn-outline btn-sm btn-block mt-2">View Details</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

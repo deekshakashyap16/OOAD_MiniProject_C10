@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My Orders | Campus Marketplace</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/buyer/browse}">🎓 Campus Marketplace</a></div>
+    <div class="nav-links">
+        <a th:href="@{/buyer/browse}">Browse</a>
+        <a th:href="@{/buyer/orders}">My Orders</a>
+        <span class="nav-user" sec:authentication="name"></span>
+        <a th:href="@{/logout}" class="btn-logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+    <div class="page-header">
+        <div>
+            <h1>My Purchase History</h1>
+            <p class="page-subtitle">All items you have bought</p>
+        </div>
+        <a th:href="@{/buyer/browse}" class="btn btn-outline">Browse More Items</a>
+    </div>
+
+    <!-- Empty state -->
+    <div th:if="${orders.empty}" class="empty-state">
+        <span class="empty-icon">🛍️</span>
+        <p>You haven't purchased anything yet.</p>
+        <a th:href="@{/buyer/browse}" class="btn btn-primary mt-2">Start Browsing</a>
+    </div>
+
+    <!-- Orders table -->
+    <div class="table-wrap" th:unless="${orders.empty}">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>Category</th>
+                    <th>Price Paid</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.id}">1</td>
+                    <td>
+                        <div class="fw-bold" th:text="${order.item.name}">Item</div>
+                        <div class="text-muted" th:text="${#strings.abbreviate(order.item.description,60)}"></div>
+                    </td>
+                    <td th:text="${order.item.category.name}">Category</td>
+                    <td class="fw-bold" th:text="'₹' + ${order.purchasePrice}">₹0</td>
+                    <td th:text="${#temporals.format(order.orderDate,'dd MMM yyyy, hh:mm a')}">Date</td>
+                    <td>
+                        <span class="badge badge-approved"
+                              th:text="${order.status}">CONFIRMED</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

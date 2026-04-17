@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${item.name} + ' | Campus Marketplace'">Item Detail</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/buyer/browse}">🎓 Campus Marketplace</a></div>
+    <div class="nav-links">
+        <a th:href="@{/buyer/browse}">Browse</a>
+        <a th:href="@{/buyer/orders}">My Orders</a>
+        <span class="nav-user" sec:authentication="name"></span>
+        <a th:href="@{/logout}" class="btn-logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container-md">
+
+    <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+    <div style="margin-bottom:1rem;">
+        <a th:href="@{/buyer/browse}" class="btn btn-secondary btn-sm">← Back to Browse</a>
+    </div>
+
+    <div class="item-detail-card">
+        <!-- Image placeholder -->
+        <div class="item-detail-img">📦</div>
+
+        <!-- Details -->
+        <div>
+            <span class="badge badge-approved">Available</span>
+            <h1 style="font-size:1.5rem; margin:.6rem 0;" th:text="${item.name}">Item Name</h1>
+
+            <div class="item-detail-price" th:text="'₹' + ${item.price}">₹0</div>
+
+            <div class="text-muted mb-1">
+                Category: <strong th:text="${item.category.name}">Category</strong>
+            </div>
+            <div class="text-muted mb-2">
+                Listed on: <span th:text="${#temporals.format(item.createdAt,'dd MMM yyyy')}">Date</span>
+            </div>
+
+            <p class="item-detail-desc" th:text="${item.description}">Description</p>
+
+            <!-- UC3: Purchase Button — POST form -->
+            <form th:action="@{/buyer/purchase/{id}(id=${item.id})}" method="post"
+                  data-confirm="Confirm purchase of this item for ₹?">
+                <button type="submit" class="btn btn-success">
+                    🛒 Buy Now for ₹<span th:text="${item.price}">0</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

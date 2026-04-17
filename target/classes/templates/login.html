@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login | Campus Marketplace</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            <h1>🎓 Campus Marketplace</h1>
+            <p>Buy and sell within your campus</p>
+        </div>
+
+        <!-- Flash messages from redirect (e.g. after registration) -->
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+        <!-- Spring Security sets ?error when credentials fail -->
+        <div th:if="${param.error}" class="alert alert-error">
+            Invalid email or password. Please try again.
+        </div>
+        <div th:if="${param.logout}" class="alert alert-info">
+            You have been logged out successfully.
+        </div>
+
+        <!--
+            Spring Security listens on POST /login.
+            usernameParameter="email" is configured in SecurityConfig.
+        -->
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email"
+                       class="form-control" placeholder="you@campus.edu"
+                       required autofocus/>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password"
+                       class="form-control" placeholder="••••••••" required/>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mt-2">Sign In</button>
+        </form>
+
+        <div class="auth-footer">
+            New to Campus Marketplace?
+            <a th:href="@{/register}">Create an account</a>
+        </div>
+
+        <!-- Demo credentials hint (remove in production) -->
+        <div class="alert alert-info mt-3" style="font-size:.8rem;">
+            <strong>Demo accounts:</strong><br/>
+            Admin &nbsp;: admin@campus.edu / admin123<br/>
+            Seller &nbsp;: alice@campus.edu / pass123<br/>
+            Buyer  : charlie@campus.edu / pass123
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>
