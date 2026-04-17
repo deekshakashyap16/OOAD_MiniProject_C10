@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Reports | Campus Marketplace</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/admin/dashboard}">🎓 Campus Marketplace</a></div>
+    <div class="nav-links">
+        <a th:href="@{/admin/dashboard}">Dashboard</a>
+        <a th:href="@{/admin/moderate}">Moderate</a>
+        <a th:href="@{/admin/items}">Listings</a>
+        <a th:href="@{/admin/reports}">Reports</a>
+        <a th:href="@{/admin/categories}">Categories</a>
+        <a th:href="@{/admin/users}">Users</a>
+        <span class="nav-user" sec:authentication="name"></span>
+        <a th:href="@{/logout}" class="btn-logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container-md">
+
+    <div class="page-header">
+        <div>
+            <h1>📊 System Reports</h1>
+            <p class="page-subtitle">Live snapshot of marketplace activity</p>
+        </div>
+    </div>
+
+    <!-- User Statistics -->
+    <div class="report-section">
+        <h3>👥 User Statistics</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Metric</th><th class="text-right">Count</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>Total Active Users</td>
+                        <td class="fw-bold text-right" th:text="${report.totalUsers}">0</td>
+                    </tr>
+                    <tr>
+                        <td>Active Buyers</td>
+                        <td class="fw-bold text-right" th:text="${report.totalBuyers}">0</td>
+                    </tr>
+                    <tr>
+                        <td>Active Sellers</td>
+                        <td class="fw-bold text-right" th:text="${report.totalSellers}">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Listing Statistics -->
+    <div class="report-section">
+        <h3>📦 Listing Statistics</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Status</th><th class="text-right">Count</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-pending">Pending Review</span></td>
+                        <td class="fw-bold text-right" th:text="${report.pendingListings}">0</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-approved">Approved (Live)</span></td>
+                        <td class="fw-bold text-right" th:text="${report.approvedListings}">0</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-rejected">Rejected</span></td>
+                        <td class="fw-bold text-right" th:text="${report.rejectedListings}">0</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-sold">Sold</span></td>
+                        <td class="fw-bold text-right" th:text="${report.soldListings}">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Transaction Statistics -->
+    <div class="report-section">
+        <h3>🛒 Transaction Statistics</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Metric</th><th class="text-right">Value</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>Total Orders Placed</td>
+                        <td class="fw-bold text-right" th:text="${report.totalOrders}">0</td>
+                    </tr>
+                    <tr>
+                        <td>Total Revenue (₹)</td>
+                        <td class="fw-bold text-right" style="color:#1a73e8;"
+                            th:text="'₹' + ${report.totalRevenue}">₹0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

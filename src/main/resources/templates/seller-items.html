@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My Listings | Campus Marketplace</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/seller/dashboard}">🎓 Campus Marketplace</a></div>
+    <div class="nav-links">
+        <a th:href="@{/seller/dashboard}">My Listings</a>
+        <a th:href="@{/seller/item/new}">+ List Item</a>
+        <span class="nav-user" sec:authentication="name"></span>
+        <a th:href="@{/logout}" class="btn-logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}"   class="alert alert-error"   th:text="${errorMessage}"></div>
+
+    <div class="page-header">
+        <div>
+            <h1>My Listings</h1>
+            <p class="page-subtitle">Manage items you have listed for sale</p>
+        </div>
+        <a th:href="@{/seller/item/new}" class="btn btn-primary">+ List New Item</a>
+    </div>
+
+    <!-- Empty state -->
+    <div th:if="${items.empty}" class="empty-state">
+        <span class="empty-icon">📦</span>
+        <p>You haven't listed any items yet.</p>
+        <a th:href="@{/seller/item/new}" class="btn btn-primary mt-2">List Your First Item</a>
+    </div>
+
+    <!-- Listings table -->
+    <div class="table-wrap" th:unless="${items.empty}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Admin Feedback</th>
+                    <th>Listed On</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${items}">
+                    <td class="fw-bold" th:text="${item.name}">Name</td>
+                    <td th:text="${item.category.name}">Category</td>
+                    <td th:text="'₹' + ${item.price}">₹0</td>
+                    <td>
+                        <span th:class="'badge badge-' + ${item.status.name().toLowerCase().replace('_','-')}"
+                              th:text="${item.status}">STATUS</span>
+                    </td>
+                    <td>
+                        <span th:if="${item.adminFeedback != null}" class="text-muted"
+                              th:text="${item.adminFeedback}">—</span>
+                        <span th:unless="${item.adminFeedback != null}" class="text-muted">—</span>
+                    </td>
+                    <td th:text="${#temporals.format(item.createdAt,'dd MMM yyyy')}">Date</td>
+                    <td>
+                        <div class="td-actions">
+                            <!-- Edit: only for non-SOLD, non-REMOVED -->
+                            <a th:if="${item.status.name() != 'SOLD' and item.status.name() != 'REMOVED'}"
+                               th:href="@{/seller/item/{id}/edit(id=${item.id})}"
+                               class="btn btn-warning btn-sm">Edit</a>
+
+                            <!-- Remove: only for non-SOLD, non-REMOVED -->
+                            <form th:if="${item.status.name() != 'SOLD' and item.status.name() != 'REMOVED'}"
+                                  th:action="@{/seller/item/{id}/remove(id=${item.id})}"
+                                  method="post" data-confirm="Remove this listing permanently?">
+                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

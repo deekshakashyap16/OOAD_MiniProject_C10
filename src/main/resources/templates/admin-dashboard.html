@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin Dashboard | Campus Marketplace</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/admin/dashboard}">🎓 Campus Marketplace</a></div>
+    <div class="nav-links">
+        <a th:href="@{/admin/dashboard}">Dashboard</a>
+        <a th:href="@{/admin/moderate}">Moderate</a>
+        <a th:href="@{/admin/items}">Listings</a>
+        <a th:href="@{/admin/reports}">Reports</a>
+        <a th:href="@{/admin/categories}">Categories</a>
+        <a th:href="@{/admin/users}">Users</a>
+        <span class="nav-user" sec:authentication="name"></span>
+        <a th:href="@{/logout}" class="btn-logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}"   class="alert alert-error"   th:text="${errorMessage}"></div>
+
+    <div class="page-header">
+        <div>
+            <h1>Admin Dashboard</h1>
+            <p class="page-subtitle">Overview of campus marketplace activity</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card orange">
+            <div class="stat-label">Pending Review</div>
+            <div class="stat-value" th:text="${pendingCount}">0</div>
+            <a th:href="@{/admin/moderate}" style="font-size:.82rem;">View Queue →</a>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-label">Approved Listings</div>
+            <div class="stat-value" th:text="${approvedCount}">0</div>
+        </div>
+        <div class="stat-card blue">
+            <div class="stat-label">Completed Orders</div>
+            <div class="stat-value" th:text="${orderCount}">0</div>
+        </div>
+        <div class="stat-card purple">
+            <div class="stat-label">Items Sold</div>
+            <div class="stat-value" th:text="${soldCount}">0</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="form-card">
+        <h3 style="margin-bottom:1rem;">Quick Actions</h3>
+        <div class="d-flex gap-2 flex-wrap">
+            <a th:href="@{/admin/moderate}"   class="btn btn-warning">⏳ Review Pending Items</a>
+            <a th:href="@{/admin/reports}"    class="btn btn-primary">📊 Generate Reports</a>
+            <a th:href="@{/admin/categories}" class="btn btn-secondary">🏷️ Manage Categories</a>
+            <a th:href="@{/admin/users}"      class="btn btn-secondary">👥 Manage Users</a>
+        </div>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

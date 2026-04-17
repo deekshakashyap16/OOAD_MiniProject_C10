@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Categories | Campus Marketplace</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/admin/dashboard}">🎓 Campus Marketplace</a></div>
+    <div class="nav-links">
+        <a th:href="@{/admin/dashboard}">Dashboard</a>
+        <a th:href="@{/admin/moderate}">Moderate</a>
+        <a th:href="@{/admin/items}">Listings</a>
+        <a th:href="@{/admin/reports}">Reports</a>
+        <a th:href="@{/admin/categories}">Categories</a>
+        <a th:href="@{/admin/users}">Users</a>
+        <span class="nav-user" sec:authentication="name"></span>
+        <a th:href="@{/logout}" class="btn-logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container-md">
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}"   class="alert alert-error"   th:text="${errorMessage}"></div>
+
+    <div class="page-header">
+        <h1>🏷️ Manage Categories</h1>
+    </div>
+
+    <!-- Add Category Form -->
+    <div class="form-card mb-2">
+        <h3 style="margin-bottom:1rem;">Add New Category</h3>
+        <form th:action="@{/admin/categories/new}" method="post"
+              style="display:flex; gap:.75rem; flex-wrap:wrap; align-items:flex-end;">
+            <div class="form-group" style="flex:1; min-width:160px; margin-bottom:0;">
+                <label>Name *</label>
+                <input type="text" name="name" class="form-control"
+                       placeholder="e.g. Musical Instruments" required/>
+            </div>
+            <div class="form-group" style="flex:2; min-width:200px; margin-bottom:0;">
+                <label>Description</label>
+                <input type="text" name="description" class="form-control"
+                       placeholder="Optional description"/>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Category</button>
+        </form>
+    </div>
+
+    <!-- Existing Categories -->
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>#</th><th>Name</th><th>Description</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+                <tr th:each="cat : ${categories}">
+                    <td th:text="${cat.id}">1</td>
+                    <td class="fw-bold" th:text="${cat.name}">Name</td>
+                    <td class="text-muted" th:text="${cat.description != null ? cat.description : '—'}">—</td>
+                    <td>
+                        <form th:action="@{/admin/categories/{id}/delete(id=${cat.id})}"
+                              method="post"
+                              data-confirm="Delete this category? Items in it may be affected.">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

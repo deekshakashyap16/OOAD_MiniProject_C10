@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Users | Campus Marketplace</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/admin/dashboard}">🎓 Campus Marketplace</a></div>
+    <div class="nav-links">
+        <a th:href="@{/admin/dashboard}">Dashboard</a>
+        <a th:href="@{/admin/moderate}">Moderate</a>
+        <a th:href="@{/admin/items}">Listings</a>
+        <a th:href="@{/admin/reports}">Reports</a>
+        <a th:href="@{/admin/categories}">Categories</a>
+        <a th:href="@{/admin/users}">Users</a>
+        <span class="nav-user" sec:authentication="name"></span>
+        <a th:href="@{/logout}" class="btn-logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}"   class="alert alert-error"   th:text="${errorMessage}"></div>
+
+    <div class="page-header">
+        <div>
+            <h1>👥 User Management</h1>
+            <p class="page-subtitle">View and deactivate campus users</p>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}">1</td>
+                    <td class="fw-bold" th:text="${user.name}">Name</td>
+                    <td th:text="${user.email}">email</td>
+                    <td>
+                        <span th:class="'badge badge-' + ${user.role.name().toLowerCase()}"
+                              th:text="${user.role}">ROLE</span>
+                    </td>
+                    <td>
+                        <span th:if="${user.active}"  class="badge badge-approved">Active</span>
+                        <span th:unless="${user.active}" class="badge badge-removed">Inactive</span>
+                    </td>
+                    <td th:text="${user.createdAt != null ? #temporals.format(user.createdAt,'dd MMM yyyy') : '—'}">Date</td>
+                    <td>
+                        <!-- Don't deactivate already inactive users or admins -->
+                        <form th:if="${user.active and user.role.name() != 'ADMIN'}"
+                              th:action="@{/admin/users/{id}/deactivate(id=${user.id})}"
+                              method="post"
+                              data-confirm="Deactivate this user? They will no longer be able to log in.">
+                            <button type="submit" class="btn btn-danger btn-sm">Deactivate</button>
+                        </form>
+                        <span th:unless="${user.active}" class="text-muted">—</span>
+                        <span th:if="${user.active and user.role.name() == 'ADMIN'}" class="text-muted">Protected</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

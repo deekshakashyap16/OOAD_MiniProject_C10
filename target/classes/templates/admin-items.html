@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Moderate Listings | Campus Marketplace</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/admin/dashboard}">🎓 Campus Marketplace</a></div>
+    <div class="nav-links">
+        <a th:href="@{/admin/dashboard}">Dashboard</a>
+        <a th:href="@{/admin/moderate}">Moderate</a>
+        <a th:href="@{/admin/items}">Listings</a>
+        <a th:href="@{/admin/reports}">Reports</a>
+        <a th:href="@{/admin/categories}">Categories</a>
+        <a th:href="@{/admin/users}">Users</a>
+        <span class="nav-user" sec:authentication="name"></span>
+        <a th:href="@{/logout}" class="btn-logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}"   class="alert alert-error"   th:text="${errorMessage}"></div>
+
+    <div class="page-header">
+        <div>
+            <h1>Moderate Listings</h1>
+            <p class="page-subtitle">Review and approve or reject pending item submissions</p>
+        </div>
+        <span class="badge badge-pending" style="font-size:.95rem; padding:.4rem .9rem;"
+              th:text="${items.size()} + ' pending'">0 pending</span>
+    </div>
+
+    <!-- Empty queue -->
+    <div th:if="${items.empty}" class="empty-state">
+        <span class="empty-icon">✅</span>
+        <p>No items awaiting review. Queue is clear!</p>
+    </div>
+
+    <!-- Pending Items Table -->
+    <div class="table-wrap" th:unless="${items.empty}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Seller</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Submitted</th>
+                    <th>Approve / Reject</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${items}">
+                    <td>
+                        <div class="fw-bold" th:text="${item.name}">Name</div>
+                        <div class="text-muted" th:text="${#strings.abbreviate(item.description,80)}">Desc</div>
+                    </td>
+                    <td th:text="${item.seller.name}">Seller</td>
+                    <td th:text="${item.category.name}">Category</td>
+                    <td class="fw-bold" th:text="'₹' + ${item.price}">₹0</td>
+                    <td th:text="${#temporals.format(item.createdAt,'dd MMM yyyy')}">Date</td>
+                    <td>
+                        <div class="d-flex gap-1 flex-wrap">
+
+                            <!-- Approve (optional feedback) -->
+                            <form th:action="@{/admin/moderate/{id}/approve(id=${item.id})}" method="post"
+                                  style="display:inline-flex; gap:.3rem; align-items:center; flex-wrap:wrap;">
+                                <input type="text" name="feedback"
+                                       class="form-control" style="width:160px; font-size:.8rem;"
+                                       placeholder="Optional note…"/>
+                                <button type="submit" class="btn btn-success btn-sm">✔ Approve</button>
+                            </form>
+
+                            <!-- Reject (feedback required) -->
+                            <form th:action="@{/admin/moderate/{id}/reject(id=${item.id})}" method="post"
+                                  style="display:inline-flex; gap:.3rem; align-items:center; flex-wrap:wrap;">
+                                <input type="text" name="feedback"
+                                       class="form-control" style="width:160px; font-size:.8rem;"
+                                       placeholder="Rejection reason…" required/>
+                                <button type="submit" class="btn btn-danger btn-sm">✘ Reject</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Dynamic title: "Edit" if item exists, else "List New Item" -->
+    <title th:text="${item != null ? 'Edit Listing' : 'List New Item'} + ' | Campus Marketplace'">Item Form</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand"><a th:href="@{/seller/dashboard}">🎓 Campus Marketplace</a></div>
+    <div class="nav-links">
+        <a th:href="@{/seller/dashboard}">My Listings</a>
+        <a th:href="@{/seller/item/new}">+ List Item</a>
+        <span class="nav-user" sec:authentication="name"></span>
+        <a th:href="@{/logout}" class="btn-logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container-md">
+
+    <div style="margin-bottom:1rem;">
+        <a th:href="@{/seller/dashboard}" class="btn btn-secondary btn-sm">← Back to Dashboard</a>
+    </div>
+
+    <div class="form-card">
+
+        <h2 style="margin-bottom:1.5rem;"
+            th:text="${item != null ? '✏️ Edit Listing' : '📦 List New Item'}">
+            List New Item
+        </h2>
+
+        <!-- Admin feedback notice (shown when re-editing after price feedback) -->
+        <div th:if="${item != null and item.adminFeedback != null}" class="feedback-box">
+            <strong>📋 Admin Feedback:</strong>
+            <span th:text="${item.adminFeedback}"></span>
+        </div>
+
+        <!--
+            Action switches between create (POST /seller/item/new)
+            and update (POST /seller/item/{id}/edit) depending on whether 'item' is set.
+        -->
+        <form th:action="${item != null ? '/seller/item/' + item.id + '/edit' : '/seller/item/new'}"
+              th:object="${itemRequest}" method="post" novalidate>
+
+            <!-- Item Name -->
+            <div class="form-group">
+                <label for="name">Item Name *</label>
+                <input type="text" id="name" th:field="*{name}"
+                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                       class="form-control" placeholder="e.g. Calculus Textbook 5th Edition"
+                       required/>
+                <div class="field-error" th:if="${#fields.hasErrors('name')}"
+                     th:errors="*{name}"></div>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label for="description">Description *</label>
+                <textarea id="description" th:field="*{description}"
+                          th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"
+                          class="form-control" rows="4"
+                          placeholder="Describe the item's condition, edition, usage, etc."
+                          required></textarea>
+                <div class="field-error" th:if="${#fields.hasErrors('description')}"
+                     th:errors="*{description}"></div>
+            </div>
+
+            <!-- Price -->
+            <div class="form-group">
+                <label for="price">Price (₹) *</label>
+                <input type="number" id="price" th:field="*{price}"
+                       th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'"
+                       class="form-control" placeholder="e.g. 350.00"
+                       min="0.01" step="0.01" required/>
+                <div class="field-error" th:if="${#fields.hasErrors('price')}"
+                     th:errors="*{price}"></div>
+            </div>
+
+            <!-- Category -->
+            <div class="form-group">
+                <label for="categoryId">Category *</label>
+                <select id="categoryId" th:field="*{categoryId}"
+                        th:classappend="${#fields.hasErrors('categoryId')} ? 'is-invalid'"
+                        class="form-control" required>
+                    <option value="">-- Select category --</option>
+                    <option th:each="cat : ${categories}"
+                            th:value="${cat.id}"
+                            th:text="${cat.name}">
+                    </option>
+                </select>
+                <div class="field-error" th:if="${#fields.hasErrors('categoryId')}"
+                     th:errors="*{categoryId}"></div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-primary"
+                        th:text="${item != null ? 'Update &amp; Resubmit' : 'Submit for Review'}">
+                    Submit
+                </button>
+                <a th:href="@{/seller/dashboard}" class="btn btn-secondary">Cancel</a>
+            </div>
+
+            <p class="text-muted mt-2" style="font-size:.83rem;">
+                * All listings are reviewed by an admin before becoming visible to buyers.
+            </p>
+        </form>
+    </div>
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>
