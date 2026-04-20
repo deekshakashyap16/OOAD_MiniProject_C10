@@ -4,6 +4,7 @@ import com.pes.marketplace.dto.ItemRequest;
 import com.pes.marketplace.dto.ReportDto;
 import com.pes.marketplace.exception.*;
 import com.pes.marketplace.model.*;
+import com.pes.marketplace.patterns.ocp.ListingFeeCalculator;
 import com.pes.marketplace.repository.*;
 import com.pes.marketplace.service.MarketplaceService;
 import org.springframework.stereotype.Service;
@@ -37,20 +38,23 @@ import java.util.Optional;
 @Transactional
 public class MarketplaceServiceImpl implements MarketplaceService {
 
-    private final ItemRepository     itemRepository;
-    private final OrderRepository    orderRepository;
-    private final CategoryRepository categoryRepository;
-    private final UserRepository     userRepository;   // needed for report counts only
+    private final ItemRepository       itemRepository;
+    private final OrderRepository      orderRepository;
+    private final CategoryRepository   categoryRepository;
+    private final UserRepository       userRepository;   // needed for report counts only
+    private final ListingFeeCalculator listingFeeCalculator; // OCP: category-policy entry point
 
     /** Constructor injection — enables easy unit-testing with mocks. */
     public MarketplaceServiceImpl(ItemRepository itemRepository,
                                   OrderRepository orderRepository,
                                   CategoryRepository categoryRepository,
-                                  UserRepository userRepository) {
-        this.itemRepository     = itemRepository;
-        this.orderRepository    = orderRepository;
-        this.categoryRepository = categoryRepository;
-        this.userRepository     = userRepository;
+                                  UserRepository userRepository,
+                                  ListingFeeCalculator listingFeeCalculator) {
+        this.itemRepository       = itemRepository;
+        this.orderRepository      = orderRepository;
+        this.categoryRepository   = categoryRepository;
+        this.userRepository       = userRepository;
+        this.listingFeeCalculator = listingFeeCalculator;
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -66,6 +70,13 @@ public class MarketplaceServiceImpl implements MarketplaceService {
     @Override
     public Item listItem(ItemRequest request, User seller) {
         Category category = resolveCategory(request.getCategoryId());
+
+        // OCP in action: the fee for this listing is derived by the
+        // CategoryPolicy hierarchy — no switch/if-ladder lives here.
+        double listingFee = listingFeeCalculator.calculateFee(category);
+        System.out.printf("[OCP] Listing fee for '%s' category: ₹%.2f%n",
+                category.getName(), listingFee);
+
         Item item = new Item(
                 request.getName(),
                 request.getDescription(),
@@ -77,6 +88,19 @@ public class MarketplaceServiceImpl implements MarketplaceService {
         // we set it explicitly here for clarity and documentation.
         item.setStatus(ItemStatus.PENDING_REVIEW);
         return itemRepository.save(item);
+    }
+
+    // ── OCP: Listing fee exposure ───────────────────────────────────────────
+
+    /**
+     * Delegates to ListingFeeCalculator — the only place where the
+     * CategoryPolicy hierarchy is consumed.  Controllers use this to
+     * display fees without ever touching a concrete policy class.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public double calculateListingFee(Category category) {
+        return listingFeeCalculator.calculateFee(category);
     }
 
     // ══════════════════════════════════════════════════════════════════════

@@ -5,6 +5,8 @@ import com.pes.marketplace.exception.DuplicateEmailException;
 import com.pes.marketplace.exception.ResourceNotFoundException;
 import com.pes.marketplace.model.Role;
 import com.pes.marketplace.model.User;
+import com.pes.marketplace.patterns.factory.UserRoleResolver;
+import com.pes.marketplace.patterns.factory.model.UserRole;
 import com.pes.marketplace.repository.UserRepository;
 import com.pes.marketplace.service.AuthService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,17 +37,20 @@ import java.util.Optional;
 @Transactional
 public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserRepository    userRepository;
+    private final PasswordEncoder   passwordEncoder;
+    private final UserRoleResolver  userRoleResolver;   // Factory pattern entry point
 
     /**
      * Constructor injection — satisfies SOLID DIP and makes unit-testing trivial
      * (pass mocks for both collaborators).
      */
     public AuthServiceImpl(UserRepository userRepository,
-                           PasswordEncoder passwordEncoder) {
-        this.userRepository  = userRepository;
-        this.passwordEncoder = passwordEncoder;
+                           PasswordEncoder passwordEncoder,
+                           UserRoleResolver userRoleResolver) {
+        this.userRepository   = userRepository;
+        this.passwordEncoder  = passwordEncoder;
+        this.userRoleResolver = userRoleResolver;
     }
 
     // ── UC: Register ────────────────────────────────────────────────────────
@@ -69,7 +74,17 @@ public class AuthServiceImpl implements AuthService {
                 passwordEncoder.encode(request.getPassword()),   // never store plaintext
                 request.getRole()
         );
-        return userRepository.save(user);
+        User saved = userRepository.save(user);
+
+        // Factory pattern in action: the correct UserRoleFactory is picked,
+        // its create() template method runs verifyRole → loadPermissions →
+        // redirectToDashboard, and we hand the prepared UserRole back to the
+        // server log.  Existing callers never instantiate a role themselves.
+        UserRole roleConfig = userRoleResolver.resolve(saved.getRole());
+        System.out.printf("[Factory] Registered %s — role=%s, dashboard=%s%n",
+                saved.getEmail(), roleConfig.getRoleName(), roleConfig.getDashboardUrl());
+
+        return saved;
     }
 
     // ── Lookups (read-only — no DB write, so use readOnly=true for optimisation) ──

@@ -2,6 +2,7 @@ package com.pes.marketplace.controller;
 
 import com.pes.marketplace.dto.ItemRequest;
 import com.pes.marketplace.exception.UnauthorizedActionException;
+import com.pes.marketplace.model.Category;
 import com.pes.marketplace.model.Item;
 import com.pes.marketplace.model.User;
 import com.pes.marketplace.service.AuthService;
@@ -15,7 +16,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Handles all HTTP interactions for the Seller role.
@@ -84,8 +87,17 @@ public class SellerController {
 
         User seller = currentUser(principal);
         List<Item> items = marketplaceService.getItemsBySeller(seller);
-        model.addAttribute("items",  items);
-        model.addAttribute("seller", seller);
+
+        // OCP: per-item listing fee computed via CategoryPolicy hierarchy.
+        Map<Long, Double> listingFees = new HashMap<>();
+        for (Item item : items) {
+            listingFees.put(item.getId(),
+                    marketplaceService.calculateListingFee(item.getCategory()));
+        }
+
+        model.addAttribute("items",       items);
+        model.addAttribute("seller",      seller);
+        model.addAttribute("listingFees", listingFees);
         return "seller-items";   // → templates/seller-items.html
     }
 
@@ -96,9 +108,24 @@ public class SellerController {
      */
     @GetMapping("/item/new")
     public String newItemForm(Model model) {
+        List<Category> categories = marketplaceService.getAllCategories();
         model.addAttribute("itemRequest", new ItemRequest());
-        model.addAttribute("categories",  marketplaceService.getAllCategories());
+        model.addAttribute("categories",  categories);
+        model.addAttribute("categoryFees", buildCategoryFeeMap(categories));
         return "add-item";   // → templates/add-item.html
+    }
+
+    /**
+     * OCP bridge for templates: maps categoryId → listing fee (derived via
+     * the CategoryPolicy hierarchy in ListingFeeCalculator).  Thymeleaf uses
+     * this map to render the fee live under the category drop-down.
+     */
+    private Map<Long, Double> buildCategoryFeeMap(List<Category> categories) {
+        Map<Long, Double> fees = new HashMap<>();
+        for (Category c : categories) {
+            fees.put(c.getId(), marketplaceService.calculateListingFee(c));
+        }
+        return fees;
     }
 
     /**
@@ -119,7 +146,9 @@ public class SellerController {
             RedirectAttributes flash) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("categories", marketplaceService.getAllCategories());
+            List<Category> categories = marketplaceService.getAllCategories();
+            model.addAttribute("categories", categories);
+            model.addAttribute("categoryFees", buildCategoryFeeMap(categories));
             return "add-item";
         }
 
@@ -159,9 +188,11 @@ public class SellerController {
         request.setPrice(item.getPrice());
         request.setCategoryId(item.getCategory().getId());
 
+        List<Category> categories = marketplaceService.getAllCategories();
         model.addAttribute("itemRequest", request);
         model.addAttribute("item",        item);
-        model.addAttribute("categories",  marketplaceService.getAllCategories());
+        model.addAttribute("categories",  categories);
+        model.addAttribute("categoryFees", buildCategoryFeeMap(categories));
         return "add-item";   // reuse the same form template; th:if on item != null shows edit title
     }
 
@@ -183,7 +214,9 @@ public class SellerController {
             RedirectAttributes flash) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("categories", marketplaceService.getAllCategories());
+            List<Category> categories = marketplaceService.getAllCategories();
+            model.addAttribute("categories", categories);
+            model.addAttribute("categoryFees", buildCategoryFeeMap(categories));
             // keep item for heading in template
             marketplaceService.findItemById(id)
                     .ifPresent(i -> model.addAttribute("item", i));

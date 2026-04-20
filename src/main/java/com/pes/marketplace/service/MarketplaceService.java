@@ -67,6 +67,13 @@ public interface MarketplaceService {
     /** Seller Dashboard — items owned by this seller in all statuses. */
     List<Item> getItemsBySeller(User seller);
 
+    /**
+     * OCP entry point — returns the listing fee for the given category by
+     * delegating to the CategoryPolicy hierarchy (ListingFeeCalculator).
+     * New category policies are added without modifying this method.
+     */
+    double calculateListingFee(Category category);
+
     // ══════════════════════════════════════════════════════════════════════
     // ITEM — Buyer use cases
     // ══════════════════════════════════════════════════════════════════════

@@ -1,5 +1,6 @@
 package com.pes.marketplace.config;
 
+import com.pes.marketplace.patterns.factory.UserRoleResolver;
 import com.pes.marketplace.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Spring Security configuration for Campus Marketplace.
@@ -42,9 +41,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final UserRoleResolver         userRoleResolver;   // Factory pattern entry point
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService,
+                          UserRoleResolver userRoleResolver) {
         this.userDetailsService = userDetailsService;
+        this.userRoleResolver   = userRoleResolver;
     }
 
     // ── Beans ───────────────────────────────────────────────────────────────
@@ -156,19 +158,26 @@ public class SecurityConfig {
     /**
      * Determines the landing page after login based on the user's role.
      *
-     * GRASP Information Expert : SecurityConfig owns role-to-URL mapping,
-     *                            so this logic belongs here, not in controllers.
+     * Factory pattern integration: instead of a hardcoded switch, the
+     * UserRoleResolver picks the right UserRoleFactory and its create()
+     * template method returns a prepared UserRole whose dashboardUrl is
+     * the single source of truth.  Adding a role requires no edits here.
+     *
+     * GRASP Information Expert : UserRole owns its own dashboard URL.
+     * GRASP Protected Variation: Role-URL mapping is centralised in the
+     *                            factory subclasses, not duplicated here.
      */
     private String determinePostLoginUrl(
             org.springframework.security.core.Authentication authentication) {
 
         return authentication.getAuthorities().stream()
                 .map(a -> a.getAuthority())
-                .map(role -> switch (role) {
-                    case "ROLE_BUYER"  -> "/buyer/browse";
-                    case "ROLE_SELLER" -> "/seller/dashboard";
-                    case "ROLE_ADMIN"  -> "/admin/dashboard";
-                    default            -> "/login";
+                .map(authority -> {
+                    try {
+                        return userRoleResolver.resolveFromAuthority(authority).getDashboardUrl();
+                    } catch (IllegalArgumentException ex) {
+                        return "/login";
+                    }
                 })
                 .findFirst()
                 .orElse("/login");
