@@ -49,6 +49,7 @@ import java.util.Optional;
  *  POST /buyer/purchase/{itemId} → UC3 purchase
  *  GET  /buyer/orders            → UC6 purchase history
  */
+
 @Controller
 @RequestMapping("/buyer")
 public class BuyerController {

@@ -47,6 +47,7 @@
                     <th>Item</th>
                     <th>Category</th>
                     <th>Price</th>
+                    <th>Listing Fee</th>
                     <th>Status</th>
                     <th>Admin Feedback</th>
                     <th>Listed On</th>
@@ -58,6 +59,9 @@
                     <td class="fw-bold" th:text="${item.name}">Name</td>
                     <td th:text="${item.category.name}">Category</td>
                     <td th:text="'₹' + ${item.price}">₹0</td>
+                    <!-- OCP: fee resolved via CategoryPolicy at request time -->
+                    <td class="text-muted"
+                        th:text="'₹' + ${#numbers.formatDecimal(listingFees[item.id], 1, 2)}">₹0</td>
                     <td>
                         <span th:class="'badge badge-' + ${item.status.name().toLowerCase().replace('_','-')}"
                               th:text="${item.status}">STATUS</span>

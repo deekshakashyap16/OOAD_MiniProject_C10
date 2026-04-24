@@ -1,31 +1,47 @@
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/security/CustomUserDetailsService.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/model/Order.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/dto/LoginRequest.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/dto/ReportDto.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/model/Role.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/exception/UnauthorizedActionException.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/exception/ResourceNotFoundException.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/model/User.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/repository/OrderRepository.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/config/SecurityConfig.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/CampusMarketplaceApplication.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/exception/ItemNotAvailableException.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/service/MarketplaceService.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/dto/ItemRequest.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/repository/UserRepository.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/controller/AdminController.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/model/Item.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/exception/DuplicateEmailException.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/model/Category.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/repository/ItemRepository.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/controller/BuyerController.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/model/OrderStatus.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/repository/CategoryRepository.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/model/ItemStatus.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/controller/SellerController.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/service/AuthService.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/dto/RegisterRequest.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/service/impl/MarketplaceServiceImpl.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/controller/AuthController.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/service/impl/AuthServiceImpl.java
-/Users/deekshakashyap/Documents/Deeksha Kashyap/PES/6th Sem/OOAD/Project/marketplace-final/src/main/java/com/pes/marketplace/config/DataInitializer.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/factory/UserRoleResolver.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/dto/ReportDto.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/repository/OrderRepository.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/model/Category.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/model/Item.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/controller/AuthController.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/service/impl/AuthServiceImpl.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/CampusMarketplaceApplication.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/config/DataInitializer.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/factory/model/AdminRole.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/model/ItemStatus.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/model/User.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/dto/ItemRequest.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/factory/model/BuyerRole.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/ocp/BooksPolicy.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/config/SecurityConfig.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/factory/factory/UserRoleFactory.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/dto/RegisterRequest.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/ocp/DefaultPolicy.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/dto/LoginRequest.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/repository/ItemRepository.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/security/CustomUserDetailsService.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/model/OrderStatus.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/exception/UnauthorizedActionException.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/factory/model/UserRole.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/ocp/SportsFitnessPolicy.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/service/impl/MarketplaceServiceImpl.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/controller/SellerController.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/ocp/ElectronicsPolicy.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/model/Role.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/factory/factory/AdminUserFactory.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/controller/AdminController.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/repository/UserRepository.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/service/MarketplaceService.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/repository/CategoryRepository.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/model/Order.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/factory/model/SellerRole.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/service/AuthService.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/exception/ItemNotAvailableException.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/ocp/StationeryPolicy.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/ocp/ClothingPolicy.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/ocp/CategoryPolicy.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/exception/DuplicateEmailException.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/ocp/ListingFeeCalculator.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/controller/BuyerController.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/patterns/factory/factory/MarketplaceUserFactory.java
+/Users/chetan/OOAD_MiniProject_C10/src/main/java/com/pes/marketplace/exception/ResourceNotFoundException.java
